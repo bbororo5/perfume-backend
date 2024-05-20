@@ -8,7 +8,7 @@ build/
 .idea/
 *.iml
 *.iws
-.idea/
+.idea/workspace.xml
 
 # Logs
 logs/
@@ -29,3 +29,5 @@ Thumbs.db
 *.env
 docker-compose.override.yml
 .idea/workspace.xml
+
+src/main/resources/application.properties
