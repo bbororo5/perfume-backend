@@ -1,5 +1,6 @@
 package com.bside405.perfume.project.user;
 
+import com.bside405.perfume.project.perfume.Perfume;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +9,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -37,5 +40,21 @@ public class User {
 
     public void setProviderId(String providerId) {
         this.providerId = providerId;
+    }
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Perfume> userPerfumes = new ArrayList<>();
+
+    public void addPerfume(Perfume perfume) {
+        userPerfumes.add(perfume);
+        perfume.setUser(this);
+    }
+
+    public void removePerfume(Perfume perfume) {
+        userPerfumes.remove(perfume);
+    }
+
+    public List<Perfume> getUserPerfumes() {
+        return userPerfumes;
     }
 }

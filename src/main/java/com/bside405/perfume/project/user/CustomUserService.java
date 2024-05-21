@@ -6,6 +6,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class CustomUserService extends DefaultOAuth2UserService {
@@ -30,9 +31,10 @@ public class CustomUserService extends DefaultOAuth2UserService {
             String name = response.get("name");
             String providerId = response.get("id");
 
-            User user = userRepository.findByProviderId(providerId);
-            if (user == null) {
-                user = new User();
+            Optional<User> optionalUser = userRepository.findByProviderId(providerId);
+
+            if (optionalUser.isEmpty()) {
+                User user = new User();
                 user.setEmail(email);
                 user.setName(name);
                 user.setProviderId(providerId);
