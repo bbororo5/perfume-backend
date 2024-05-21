@@ -31,7 +31,7 @@ public class MypageController {
         return ResponseEntity.ok(perfumes);
     }
 
-    @DeleteMapping("/myPage/{id}")
+    @DeleteMapping("/myPage/perfumes/{id}")
     public ResponseEntity<Void> removeMyPerfume(@AuthenticationPrincipal OAuth2User principal, @PathVariable Long id) {
         myPageService.removeMyPerfume(principal, id);
         return ResponseEntity.noContent().build();
