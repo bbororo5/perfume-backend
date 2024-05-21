@@ -37,7 +37,7 @@ public class MypageController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/mypage/account")
+    @DeleteMapping("/myPage/account")
     public ResponseEntity<Void> removeAccount(@AuthenticationPrincipal OAuth2User principal) {
         myPageService.removeAccount(principal);
         return ResponseEntity.noContent().build();
