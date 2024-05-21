@@ -8,7 +8,7 @@ COPY . .
 RUN ./gradlew build --no-daemon
 
 ############# 이하 2단계 : 실행
-FROM openjdk:21-jre-slim
+FROM openjdk:21-slim
 
 WORKDIR /app
 

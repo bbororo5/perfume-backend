@@ -25,12 +25,12 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((authorize) ->
                         authorize
-                                .requestMatchers("/", "/login", "/login/oauth2/code/callback", "/h2-console/**").permitAll()
+                                .requestMatchers("/", "/login", "/login/oauth2/code/callback", "/h2-console/**", "/error").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2Login ->
                         oauth2Login
-                                .defaultSuccessUrl("/", true)
+                                .defaultSuccessUrl("https://perfume-client.vercel.app/", true)
                                 .userInfoEndpoint(userInfo -> userInfo
                                         .userService(customUserService)
                                 )
@@ -40,7 +40,7 @@ public class SecurityConfig {
                                 .invalidateHttpSession(true)
                                 .deleteCookies("JSESSIONID")
                                 .logoutUrl("/logout")
-                                .logoutSuccessUrl("/")
+                                .logoutSuccessUrl("https://perfume-client.vercel.app/")
                 )
 
                 //테스트용1
