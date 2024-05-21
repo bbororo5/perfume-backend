@@ -1,33 +1,22 @@
-# Gradle
+# Gradle 관련 파일
 .gradle/
 build/
-!gradle/wrapper/gradle-wrapper.jar
-!gradle/wrapper/gradle-wrapper.properties
+!build.gradle
+!settings.gradle
 
-# IntelliJ IDEA
+# IntelliJ IDEA 관련 파일
 .idea/
 *.iml
-*.iws
-.idea/workspace.xml
 
-# Logs
-logs/
+# 로그 파일
 *.log
-*.tlog
 
-# OS Files
+# OS 별 무시 파일들
 .DS_Store
 Thumbs.db
 
-# Java
-*.class
-*.jar
-*.war
-*.ear
-
-# Docker
-*.env
-docker-compose.override.yml
-.idea/workspace.xml
+# 기타
+*.lock
+*.bin
 
 src/main/resources/application.properties
