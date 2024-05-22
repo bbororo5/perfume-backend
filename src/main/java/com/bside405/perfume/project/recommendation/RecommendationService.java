@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,13 +19,22 @@ import java.util.List;
 public class RecommendationService {
 
     private final RecommendationRepository recommendationRepository;
+    private final HashtagRepository hashtagRepository;
 
     public RecommendationResponseDTO recommendPerfume(RecommendationRequestDTO requestDTO) {
-        if (requestDTO.getHashtags().isEmpty()){
+        if (requestDTO.getHashtagList().isEmpty()){
             throw new HashtagNotFoundException("향수 추천을 위해 해시태그가 필요합니다.");
         }
 
-        List<Hashtag> hashtags = requestDTO.getHashtags();
+        List<Hashtag> hashtags = new ArrayList<>();
+        for (String hashtagName : requestDTO.getHashtagList()) {
+            Hashtag hashtag = hashtagRepository.findByName(hashtagName);
+            if (hashtag == null) {
+                throw new HashtagNotFoundException(hashtagName +"라는 이름의 해시태그를 찾을 수 없습니다");
+            }
+            hashtags.add(hashtag);
+        }
+
         Pageable pageable = PageRequest.of(0, 6);
         List<Perfume> perfumes = recommendationRepository.findTopPerfumeByHashtags(hashtags, pageable);
 
@@ -35,7 +45,7 @@ public class RecommendationService {
         Perfume mainPerfume = perfumes.get(0);
         PerfumeResponseDTO mainPerfumeDTO = new PerfumeResponseDTO(mainPerfume);
 
-        List<Perfume> subPerfumes = perfumes.subList(0, Math.min(perfumes.size(), 6));
+        List<Perfume> subPerfumes = perfumes.subList(1, Math.min(perfumes.size(), 6));
         List<PerfumeResponseDTO> subPerfumeDTOs = new LinkedList<>();
 
         for (Perfume perfume : subPerfumes) {

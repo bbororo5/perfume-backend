@@ -7,5 +7,5 @@ import java.util.List;
 
 @Getter
 public class RecommendationRequestDTO {
-    private List<Hashtag> hashtags;
+    private List<String> hashtagList;
 }
