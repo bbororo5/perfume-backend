@@ -1,6 +1,6 @@
-package com.bside405.perfume.project.security;
+package com.bside405.perfume.project.oauth2.security;
 
-import com.bside405.perfume.project.user.CustomUserService;
+import com.bside405.perfume.project.oauth2.CustomOAuth2Service;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,9 +14,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final CustomUserService customUserService;
+    private final CustomOAuth2Service customUserService;
 
-    public SecurityConfig(CustomUserService customOAuth2UserService) {
+    public SecurityConfig(CustomOAuth2Service customOAuth2UserService) {
         this.customUserService = customOAuth2UserService;
     }
 
