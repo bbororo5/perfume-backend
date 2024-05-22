@@ -47,10 +47,14 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable
                 )
                 //테스트용2
+                .cors(AbstractHttpConfigurer::disable
+                )
+                //테스트용3
                 .headers((headers) ->
 	   			    headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)
 	   		    );
+
         return http.build();
     }
 }
