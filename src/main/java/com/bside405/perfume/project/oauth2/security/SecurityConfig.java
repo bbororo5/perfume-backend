@@ -25,7 +25,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((authorize) ->
                         authorize
-                                .requestMatchers("/", "/login", "/login/oauth2/code/callback", "/h2-console/**", "/error").permitAll()
+                                .requestMatchers("/", "/login", "/login/oauth2/code/callback/**", "/error").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2Login ->
