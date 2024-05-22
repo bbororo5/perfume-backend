@@ -33,7 +33,4 @@ public class User {
     @LastModifiedDate
     @Column(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Perfume> userPerfumes = new ArrayList<>();
 }
