@@ -1,6 +1,5 @@
 package com.bside405.perfume.project.perfume;
 
-import com.bside405.perfume.project.oauth2.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,8 +40,4 @@ public class Perfume {
 
     @OneToMany(mappedBy = "perfume", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PerfumeHashtag> perfumeHashtags = new HashSet<>();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
 }
