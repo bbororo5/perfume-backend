@@ -1,6 +1,6 @@
 package com.bside405.perfume.project.perfume;
 
-import com.bside405.perfume.project.user.User;
+import com.bside405.perfume.project.oauth2.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,9 +32,11 @@ public class Perfume {
     private String imageURL;
 
     @CreatedDate
+    @Column(name = "created_date", updatable = false)
     private LocalDateTime createdDate;
 
     @LastModifiedDate
+    @Column(name = "last_modifed_date")
     private LocalDateTime lastModifiedDate;
 
     @OneToMany(mappedBy = "perfume", cascade = CascadeType.ALL, orphanRemoval = true)
