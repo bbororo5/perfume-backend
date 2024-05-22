@@ -1,4 +1,4 @@
-package com.bside405.perfume.project.user;
+package com.bside405.perfume.project.oauth2;
 
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -9,11 +9,11 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class CustomUserService extends DefaultOAuth2UserService {
+public class CustomOAuth2Service extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
 
-    public CustomUserService(UserRepository userRepository) {
+    public CustomOAuth2Service(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

@@ -1,4 +1,4 @@
-package com.bside405.perfume.project.user;
+package com.bside405.perfume.project.oauth2;
 
 import com.bside405.perfume.project.perfume.Perfume;
 import jakarta.persistence.*;
@@ -25,36 +25,15 @@ public class User {
     private String name;
     private String email;
     private String providerId;
+
     @CreatedDate
+    @Column(name = "created_date", updatable = false)
     private LocalDateTime createdDate;
+
     @LastModifiedDate
+    @Column(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setProviderId(String providerId) {
-        this.providerId = providerId;
-    }
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Perfume> userPerfumes = new ArrayList<>();
-
-    public void addPerfume(Perfume perfume) {
-        userPerfumes.add(perfume);
-        perfume.setUser(this);
-    }
-
-    public void removePerfume(Perfume perfume) {
-        userPerfumes.remove(perfume);
-    }
-
-    public List<Perfume> getUserPerfumes() {
-        return userPerfumes;
-    }
 }
