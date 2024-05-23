@@ -38,7 +38,7 @@ public class SecurityConfig {
                 }))
                 .authorizeHttpRequests((authorize) ->
                         authorize
-                                .requestMatchers("/", "/login", "/login/oauth2/code/naver", "/error").permitAll()
+                                .requestMatchers("/", "/login/**", "/error").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2Login ->
