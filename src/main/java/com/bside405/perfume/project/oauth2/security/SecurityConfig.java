@@ -38,12 +38,11 @@ public class SecurityConfig {
                 }))
                 .authorizeHttpRequests((authorize) ->
                         authorize
-                                .requestMatchers("/", "/login", "/login/oauth2/code/naver", "/error").permitAll()
+                                .requestMatchers("/", "/login", "/login/oauth2/**", "/error").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2Login ->
                         oauth2Login
-                                .loginPage("/login")
                                 .defaultSuccessUrl("https://perfume-client.vercel.app/", false)
                                 .userInfoEndpoint(userInfo -> userInfo
                                         .userService(customOAuth2Service)
