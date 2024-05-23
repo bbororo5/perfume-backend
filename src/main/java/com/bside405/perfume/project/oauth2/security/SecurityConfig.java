@@ -18,10 +18,10 @@ import java.util.Collections;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final CustomOAuth2Service customUserService;
+    private final CustomOAuth2Service customOAuth2Service;
 
     public SecurityConfig(CustomOAuth2Service customOAuth2UserService) {
-        this.customUserService = customOAuth2UserService;
+        this.customOAuth2Service = customOAuth2UserService;
     }
 
     @Bean
@@ -38,14 +38,14 @@ public class SecurityConfig {
                 }))
                 .authorizeHttpRequests((authorize) ->
                         authorize
-                                .requestMatchers("/", "/login", "/login/oauth2/code/naver", "/error").permitAll()
+                                .requestMatchers("/", "/login", "/login/oauth2/**", "/error").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2Login ->
                         oauth2Login
-                                .defaultSuccessUrl("https://perfume-client.vercel.app/", true)
+                                .defaultSuccessUrl("https://perfume-client.vercel.app/", false)
                                 .userInfoEndpoint(userInfo -> userInfo
-                                        .userService(customUserService)
+                                        .userService(customOAuth2Service)
                                 )
                 )
                 .logout(logout ->
