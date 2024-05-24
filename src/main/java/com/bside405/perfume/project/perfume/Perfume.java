@@ -26,8 +26,10 @@ public class Perfume {
 
     private String brand;
 
-    private String body;
+    @Column(name = "e_name")
+    private String eName;
 
+    @Column(name = "image_url")
     private String imageURL;
 
     @CreatedDate

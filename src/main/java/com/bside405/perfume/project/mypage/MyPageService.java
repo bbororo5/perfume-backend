@@ -52,7 +52,7 @@ public class MyPageService {
         return convertToMyPerfumeResponseDTO(myPerfume);
     }
 
-    public MyPerfumePageResponseDTO getUserPerfumes(OAuth2User principal, Pageable pageable) {
+    public MyPerfumePaginationResponseDTO getUserPerfumes(OAuth2User principal, Pageable pageable) {
         User user = getCurrentUserFromOAuth2User(principal);
         Page<MyPerfume> myPerfumePage = myPerfumeRepository.findAllByUserId(user.getId(), pageable);
 
@@ -61,7 +61,7 @@ public class MyPageService {
             MyPerfumeResponseDTO responseDTO = convertToMyPerfumeResponseDTO(myPerfume);
             responseDTOs.add(responseDTO);
         }
-        return new MyPerfumePageResponseDTO(responseDTOs,
+        return new MyPerfumePaginationResponseDTO(responseDTOs,
                                             myPerfumePage.getNumber(),
                                             myPerfumePage.getTotalPages(),
                                             myPerfumePage.getTotalElements());
@@ -109,6 +109,7 @@ public class MyPageService {
         MyPerfumeResponseDTO myPerfumeResponseDTO = new MyPerfumeResponseDTO();
         myPerfumeResponseDTO.setMyPerfumeId(myPerfume.getId());
         myPerfumeResponseDTO.setName(myPerfume.getPerfume().getName());
+        myPerfumeResponseDTO.setEName(myPerfume.getPerfume().getEName());
         myPerfumeResponseDTO.setBrand(myPerfume.getPerfume().getBrand());
         myPerfumeResponseDTO.setImageURL(myPerfume.getPerfume().getImageURL());
         return myPerfumeResponseDTO;
