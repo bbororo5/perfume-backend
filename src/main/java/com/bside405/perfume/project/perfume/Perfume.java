@@ -37,7 +37,7 @@ public class Perfume {
     private LocalDateTime createdDate;
 
     @LastModifiedDate
-    @Column(name = "last_modifed_date")
+    @Column(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
 
     @OneToMany(mappedBy = "perfume", cascade = CascadeType.ALL, orphanRemoval = true)
