@@ -27,6 +27,7 @@ public class PerfumeService {
     public PerfumeResponseDTO savePerfume(PerfumeRequestDTO perfumeRequest) {
         Perfume perfume = new Perfume();
         perfume.setName(perfumeRequest.getName());
+        perfume.setEName(perfumeRequest.getEName());
         perfume.setBrand(perfumeRequest.getBrand());
         perfume.setImageURL(perfumeRequest.getImageURL());
         Perfume savedPerfume = perfumeRepository.save(perfume);
@@ -41,6 +42,7 @@ public class PerfumeService {
             PerfumeResponseDTO perfumeResponseDTO = new PerfumeResponseDTO();
             perfumeResponseDTO.setId(perfume.getId());
             perfumeResponseDTO.setName(perfume.getName());
+            perfumeResponseDTO.setEName(perfume.getEName());
             perfumeResponseDTO.setBrand(perfume.getBrand());
             perfumeResponseDTO.setImageURL(perfume.getImageURL());
             return perfumeResponseDTO;
@@ -53,6 +55,7 @@ public class PerfumeService {
         Perfume perfume = perfumeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id + "의 id를 가진 리소스를 찾을 수 없습니다."));
         perfume.setName(perfumeRequest.getName());
+        perfume.setEName(perfumeRequest.getEName());
         perfume.setBrand(perfumeRequest.getBrand());
         perfume.setImageURL(perfumeRequest.getImageURL());
         Perfume updatedPerfume = perfumeRepository.save(perfume);
@@ -63,6 +66,7 @@ public class PerfumeService {
         PerfumeResponseDTO perfumeResponseDTO = new PerfumeResponseDTO();
         perfumeResponseDTO.setId(perfume.getId());
         perfumeResponseDTO.setName(perfume.getName());
+        perfumeResponseDTO.setEName(perfume.getEName());
         perfumeResponseDTO.setBrand(perfume.getBrand());
         perfumeResponseDTO.setImageURL(perfume.getImageURL());
         return perfumeResponseDTO;

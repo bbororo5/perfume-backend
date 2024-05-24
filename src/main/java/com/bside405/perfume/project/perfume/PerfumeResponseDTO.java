@@ -13,12 +13,14 @@ import lombok.Setter;
 public class PerfumeResponseDTO {
     private Long id;
     private String name;
+    private String eName;
     private String brand;
     private String imageURL;
 
     public PerfumeResponseDTO (Perfume perfume) {
         this.id = perfume.getId();
         this.name = perfume.getName();
+        this.eName = perfume.getEName();
         this.brand = perfume.getBrand();
         this.imageURL = perfume.getImageURL();
     }

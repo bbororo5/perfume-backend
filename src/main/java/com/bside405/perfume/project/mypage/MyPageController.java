@@ -33,8 +33,8 @@ public class MyPageController {
     }
 
     @GetMapping("/myPage/perfumes")
-    public ResponseEntity<MyPerfumePageResponseDTO> getAllMyPerfumes(@AuthenticationPrincipal OAuth2User principal, @PageableDefault(size = 6) Pageable pageable) {
-        MyPerfumePageResponseDTO myPerfumePageResponseDTO = myPageService.getUserPerfumes(principal, pageable);
+    public ResponseEntity<MyPerfumePaginationResponseDTO> getAllMyPerfumes(@AuthenticationPrincipal OAuth2User principal, @PageableDefault(size = 6) Pageable pageable) {
+        MyPerfumePaginationResponseDTO myPerfumePageResponseDTO = myPageService.getUserPerfumes(principal, pageable);
         return ResponseEntity.ok(myPerfumePageResponseDTO);
     }
 
