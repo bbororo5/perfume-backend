@@ -9,10 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-
-import java.util.Arrays;
-import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -27,23 +23,26 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
-                    CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(Collections.singletonList("https://perfume-client.vercel.app"));
-                    config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                    config.setAllowCredentials(true);
-                    config.setAllowedHeaders(Collections.singletonList("*"));
-                    config.setMaxAge(3600L);
-                    return config;
-                }))
+//                .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
+//                    CorsConfiguration config = new CorsConfiguration();
+//                    config.setAllowedOrigins(Collections.singletonList("https://perfume-client.vercel.app"));
+//                    config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+//                    config.setAllowCredentials(true);
+//                    config.setAllowedHeaders(Collections.singletonList("*"));
+//                    config.setMaxAge(3600L);
+//                    return config;
+//                }))
+                .cors(AbstractHttpConfigurer::disable)
+
                 .authorizeHttpRequests((authorize) ->
                         authorize
-                                .requestMatchers("/", "/login", "/login/oauth2/**", "/error").permitAll()
+                                .requestMatchers("/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2Login ->
                         oauth2Login
                                 .defaultSuccessUrl("https://perfume-client.vercel.app/", false)
+//                                .defaultSuccessUrl("http://localhost:8080/", false)
                                 .userInfoEndpoint(userInfo -> userInfo
                                         .userService(customOAuth2Service)
                                 )
@@ -54,6 +53,7 @@ public class SecurityConfig {
                                 .deleteCookies("JSESSIONID")
                                 .logoutUrl("/logout")
                                 .logoutSuccessUrl("https://perfume-client.vercel.app/")
+//                                .logoutSuccessUrl("http://localhost:8080/")
                 )
 
                 .csrf(AbstractHttpConfigurer::disable)
