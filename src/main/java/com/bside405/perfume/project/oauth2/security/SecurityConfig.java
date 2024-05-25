@@ -30,6 +30,7 @@ public class SecurityConfig {
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowedOrigins(Collections.singletonList("https://perfume-client.vercel.app"));
+//                    config.setAllowedOrigins(Collections.singletonList("http://localhost:8080"));
                     config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowCredentials(true);
                     config.setAllowedHeaders(Collections.singletonList("*"));
@@ -40,12 +41,13 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests((authorize) ->
                         authorize
-                                .requestMatchers("/**").permitAll()
+                                .requestMatchers("/", "/error", "/oauth2/**", "/favicon.ico", "/health", "/health/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2Login ->
                         oauth2Login
-                                .defaultSuccessUrl("https://perfume-client.vercel.app/main", false)
+                                .loginPage("/oauth2/authorization/naver")
+                                .defaultSuccessUrl("https://perfume-client.vercel.app/main", true)
 //                                .defaultSuccessUrl("http://localhost:8080/", false)
                                 .userInfoEndpoint(userInfo -> userInfo
                                         .userService(customOAuth2Service)
