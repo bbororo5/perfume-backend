@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -26,45 +27,58 @@ public class RecommendationService {
     private final HashtagRepository hashtagRepository;
 
     public RecommendationResponseDTO recommendPerfume(RecommendationRequestDTO requestDTO) {
-        log.debug("Received request to recommend perfume with hashtags: {}", requestDTO.getHashtagList());
+        log.debug("사용자에게 받은 해시태그들: {}", requestDTO.getHashtagList());
 
-        if (requestDTO.getHashtagList().isEmpty()){
-            log.warn("Hashtag list is empty, throwing HashtagNotFoundException");
+        validateHashtagList(requestDTO.getHashtagList());
+
+        List<Long> hashtagIds = convertHashtagNamesToIds(requestDTO.getHashtagList());
+        log.debug("해시태그 이름들 IDs로 변환: {}", hashtagIds);
+
+        List<Perfume> perfumes = findRecommendedPerfumes(hashtagIds);
+        log.debug("데이터베이스에서 perfumes 정보 가져오기: {}", perfumes);
+
+        return buildRecommendationResponse(perfumes);
+    }
+
+    private void validateHashtagList(List<String> hashtagList) {
+        if (hashtagList.isEmpty()) {
+            log.warn("hashtagList가 비어있습니다.");
             throw new HashtagNotFoundException("향수 추천을 위해 해시태그가 필요합니다.");
         }
+    }
 
+    private List<Long> convertHashtagNamesToIds(List<String> hashtagNames) {
         List<Long> hashtagIds = new ArrayList<>();
-        for (String hashtagName : requestDTO.getHashtagList()) {
+        for (String hashtagName : hashtagNames) {
             Hashtag hashtag = hashtagRepository.findByName(hashtagName);
             if (hashtag == null) {
-                log.warn("Hashtag with name '{}' not found, throwing HashtagNotFoundException", hashtagName);
-                throw new HashtagNotFoundException(hashtagName + "라는 이름의 해시태그를 찾을 수 없습니다");
+                log.warn("해시태그 이름 '{}'을 데이터베이스에서 찾을 수 없습니다.", hashtagName);
+                throw new HashtagNotFoundException(hashtagName+ " 라는 이름의 해시태그를 찾을 수 없습니다.");
             }
             hashtagIds.add(hashtag.getId());
         }
+        return hashtagIds;
+    }
 
-        log.debug("Converted hashtag names to IDs: {}", hashtagIds);
-
+    private List<Perfume> findRecommendedPerfumes(List<Long> hashtagIds) {
         Pageable pageable = PageRequest.of(0, 6);
-        List<Long> perfumeIds = recommendationRepository.findTopPerfumeIdsByHashtagIds(hashtagIds, pageable);
-
-        log.debug("Found top perfume IDs: {}", perfumeIds);
+        List<Long> perfumeIds = recommendationRepository.findPerfumeIdsByHashtagIdsOrderedByMatchCount(hashtagIds, pageable);
+        log.debug("가장 해시태그가 많이 겹치는 향수 {}", perfumeIds);
 
         if (perfumeIds.isEmpty()) {
-            log.warn("No perfumes found for given hashtags, throwing PerfumeNotFoundException");
+            log.warn("해시태그로부터 향수를 찾을 수 없습니다.");
             throw new PerfumeNotFoundException("해시태그와 일치하는 향수를 찾을 수 없습니다.");
         }
 
-        List<Perfume> perfumes = perfumeRepository.findAllById(perfumeIds);
+        return perfumeRepository.findAllById(perfumeIds);
+    }
 
-        log.debug("Retrieved perfumes from database: {}", perfumes);
-
+    private RecommendationResponseDTO buildRecommendationResponse(List<Perfume> perfumes) {
         Perfume mainPerfume = perfumes.get(0);
         PerfumeResponseDTO mainPerfumeDTO = new PerfumeResponseDTO(mainPerfume);
 
         List<Perfume> subPerfumes = perfumes.subList(1, Math.min(perfumes.size(), 6));
         List<PerfumeResponseDTO> subPerfumeDTOs = new LinkedList<>();
-
         for (Perfume perfume : subPerfumes) {
             PerfumeResponseDTO subPerfumeDTO = new PerfumeResponseDTO(perfume);
             subPerfumeDTOs.add(subPerfumeDTO);
@@ -74,7 +88,7 @@ public class RecommendationService {
         recommendationResponseDTO.setMainPerfume(mainPerfumeDTO);
         recommendationResponseDTO.setSubPerfumes(subPerfumeDTOs);
 
-        log.debug("Created RecommendationResponseDTO with mainPerfume: {}, subPerfumes: {}",
+        log.debug("응답DTO -> mainPerfume: {}, subPerfumes: {}",
                 recommendationResponseDTO.getMainPerfume(), recommendationResponseDTO.getSubPerfumes());
 
         return recommendationResponseDTO;

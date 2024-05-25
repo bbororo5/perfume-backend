@@ -16,9 +16,9 @@ public class RecommendationController {
 
     @PostMapping("/recommend")
     public ResponseEntity<RecommendationResponseDTO> recommendPerfume(@RequestBody RecommendationRequestDTO requestDTO) {
-        log.debug("Received recommendation request with hashtags: {}", requestDTO.getHashtagList());
+        log.debug("사용자로부터 받은 해시태그 목록들: {}", requestDTO.getHashtagList());
         RecommendationResponseDTO responseDTO = recommendationService.recommendPerfume(requestDTO);
-        log.debug("Sending response: {}", responseDTO);
+        log.debug("응답DTO: {}", responseDTO);
         return ResponseEntity.ok(responseDTO);
     }
 }
