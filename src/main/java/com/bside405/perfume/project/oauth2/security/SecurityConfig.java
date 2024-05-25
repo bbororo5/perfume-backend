@@ -27,16 +27,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-//                .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
-//                    CorsConfiguration config = new CorsConfiguration();
-//                    config.setAllowedOrigins(Collections.singletonList("https://perfume-client.vercel.app"));
-//                    config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-//                    config.setAllowCredentials(true);
-//                    config.setAllowedHeaders(Collections.singletonList("*"));
-//                    config.setMaxAge(3600L);
-//                    return config;
-//                }))
-                .cors(AbstractHttpConfigurer::disable)
+                .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
+                    CorsConfiguration config = new CorsConfiguration();
+                    config.setAllowedOrigins(Collections.singletonList("https://perfume-client.vercel.app"));
+                    config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                    config.setAllowCredentials(true);
+                    config.setAllowedHeaders(Collections.singletonList("*"));
+                    config.setMaxAge(3600L);
+                    return config;
+                }))
+//                .cors(AbstractHttpConfigurer::disable)
 
                 .authorizeHttpRequests((authorize) ->
                         authorize
