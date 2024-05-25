@@ -16,9 +16,11 @@ public class RecommendationController {
 
     @PostMapping("/recommend")
     public ResponseEntity<RecommendationResponseDTO> recommendPerfume(@RequestBody RecommendationRequestDTO requestDTO) {
+        log.debug("컨트롤러 레이어 시작");
         log.debug("사용자로부터 받은 해시태그 목록들: {}", requestDTO.getHashtagList());
         RecommendationResponseDTO responseDTO = recommendationService.recommendPerfume(requestDTO);
         log.debug("응답DTO: {}", responseDTO);
+        log.debug("컨트롤러 레이어 종료");
         return ResponseEntity.ok(responseDTO);
     }
 }
