@@ -44,7 +44,7 @@ public class SecurityConfig {
                 )
                 .oauth2Login(oauth2Login ->
                         oauth2Login
-                                .loginPage("/oauth2/authorization/naver")
+                                .loginPage("/api/oauth2/authorization/naver")
                                 .defaultSuccessUrl("https://www.perfume-bside.site/", true)
                                 .userInfoEndpoint(userInfo -> userInfo
                                         .userService(customOAuth2Service)
