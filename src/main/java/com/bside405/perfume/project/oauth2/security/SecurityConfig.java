@@ -54,7 +54,7 @@ public class SecurityConfig {
                         logout
                                 .invalidateHttpSession(true)
                                 .deleteCookies("JSESSIONID")
-                                .logoutUrl("/logout")
+                                .logoutUrl("/api/logout")
                                 .logoutSuccessUrl("https://www.perfume-bside.site/")
                 )
 
