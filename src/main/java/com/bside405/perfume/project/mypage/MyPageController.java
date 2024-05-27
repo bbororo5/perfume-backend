@@ -12,6 +12,7 @@ import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class MyPageController {
 
     private final MyPageService myPageService;

@@ -29,26 +29,23 @@ public class SecurityConfig {
         http
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(Collections.singletonList("https://perfume-client.vercel.app"));
-//                    config.setAllowedOrigins(Collections.singletonList("http://localhost:8080"));
+                    config.setAllowedOrigins(Collections.singletonList("https://www.perfume-bside.site"));
                     config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowCredentials(true);
                     config.setAllowedHeaders(Collections.singletonList("*"));
                     config.setMaxAge(3600L);
                     return config;
                 }))
-//                .cors(AbstractHttpConfigurer::disable)
 
                 .authorizeHttpRequests((authorize) ->
                         authorize
-                                .requestMatchers("/", "/error", "/oauth2/**", "/favicon.ico", "/health", "/health/**").permitAll()
+                                .requestMatchers("/", "/error", "/oauth2/**", "/api/health").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2Login ->
                         oauth2Login
                                 .loginPage("/oauth2/authorization/naver")
-                                .defaultSuccessUrl("https://perfume-client.vercel.app/main", true)
-//                                .defaultSuccessUrl("http://localhost:8080/", false)
+                                .defaultSuccessUrl("https://www.perfume-bside.site/", true)
                                 .userInfoEndpoint(userInfo -> userInfo
                                         .userService(customOAuth2Service)
                                 )
@@ -58,8 +55,7 @@ public class SecurityConfig {
                                 .invalidateHttpSession(true)
                                 .deleteCookies("JSESSIONID")
                                 .logoutUrl("/logout")
-                                .logoutSuccessUrl("https://perfume-client.vercel.app/")
-//                                .logoutSuccessUrl("http://localhost:8080/")
+                                .logoutSuccessUrl("https://www.perfume-bside.site/")
                 )
 
                 .csrf(AbstractHttpConfigurer::disable)
