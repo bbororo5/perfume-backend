@@ -39,7 +39,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests((authorize) ->
                         authorize
-                                .requestMatchers("/", "/error", "/oauth2/**", "/api/health").permitAll()
+                                .requestMatchers("/", "/oauth2/**", "/api/health").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2Login ->
