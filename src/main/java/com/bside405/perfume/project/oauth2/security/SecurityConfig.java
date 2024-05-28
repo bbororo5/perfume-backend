@@ -39,12 +39,11 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests((authorize) ->
                         authorize
-                                .requestMatchers("/", "/oauth2/**", "/api/health").permitAll()
+                                .requestMatchers("/", "/oauth2/**", "/login", "/api/login/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2Login ->
                         oauth2Login
-                                .loginPage("/api/oauth2/authorization/naver")
                                 .defaultSuccessUrl("https://www.perfume-bside.site/", true)
                                 .userInfoEndpoint(userInfo -> userInfo
                                         .userService(customOAuth2Service)
