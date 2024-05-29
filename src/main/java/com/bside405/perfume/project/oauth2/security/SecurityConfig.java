@@ -44,7 +44,7 @@ public class SecurityConfig {
                 )
                 .oauth2Login(oauth2Login ->
                         oauth2Login
-                                .defaultSuccessUrl("https://frontend.perfume-bside.site/main", true)
+                                .defaultSuccessUrl("https://frontend.perfume-bside.site/", true)
                                 .userInfoEndpoint(userInfo -> userInfo
                                         .userService(customOAuth2Service)
                                 )
