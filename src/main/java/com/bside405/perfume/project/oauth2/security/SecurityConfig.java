@@ -29,7 +29,7 @@ public class SecurityConfig {
         http
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(Collections.singletonList("https://perfume-bside.site"));
+                    config.setAllowedOrigins(Collections.singletonList("https://frontend.perfume-bside.site"));
                     config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowCredentials(true);
                     config.setAllowedHeaders(Collections.singletonList("*"));
@@ -44,7 +44,7 @@ public class SecurityConfig {
                 )
                 .oauth2Login(oauth2Login ->
                         oauth2Login
-                                .defaultSuccessUrl("https://perfume-bside.site/main", true)
+                                .defaultSuccessUrl("https://frontend.perfume-bside.site/main", true)
                                 .userInfoEndpoint(userInfo -> userInfo
                                         .userService(customOAuth2Service)
                                 )
@@ -54,7 +54,7 @@ public class SecurityConfig {
                                 .invalidateHttpSession(true)
                                 .deleteCookies("JSESSIONID")
                                 .logoutUrl("/api/logout")
-                                .logoutSuccessUrl("https://perfume-bside.site/")
+                                .logoutSuccessUrl("https://frontend.perfume-bside.site/")
                 )
 
                 .csrf(AbstractHttpConfigurer::disable)
