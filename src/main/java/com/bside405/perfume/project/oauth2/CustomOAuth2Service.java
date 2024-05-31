@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -24,23 +25,31 @@ public class CustomOAuth2Service extends DefaultOAuth2UserService {
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+        logger.debug("OAuth2 사용자 요청 처리 시작");
+
+        // Access Token 로그 추가
+        OAuth2AccessToken accessToken = userRequest.getAccessToken();
+        logger.debug("Access Token: {}", accessToken.getTokenValue());
+
         OAuth2User oAuth2User;
         try {
             oAuth2User = super.loadUser(userRequest);
+            logger.debug("OAuth2 사용자 로드 성공: {}", oAuth2User.getAttributes());
         } catch (OAuth2AuthenticationException e) {
             logger.error("OAuth2 사용자 로드 중 오류 발생: {}", e.getMessage(), e);
             throw e;
         }
 
         Map<String, Object> attributes = oAuth2User.getAttributes();
+        logger.debug("OAuth2 사용자 속성: {}", attributes);
         Map<String, Object> response = (Map<String, Object>) attributes.get("response");
 
         if (response != null) {
-            // 새로운 OAuth2User 객체를 생성하여 사용자 정보를 response에서 추출
+            logger.debug("OAuth2 사용자 정보 추출 성공: {}", response);
             oAuth2User = new DefaultOAuth2User(
                     oAuth2User.getAuthorities(),
                     response,
-                    "id" // 네이버 사용자 정보에서 고유 식별자 속성 이름
+                    "id"
             );
         } else {
             String errorMessage = "OAuth2User에서 'response' 속성을 찾을 수 없습니다.";
