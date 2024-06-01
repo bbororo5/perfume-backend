@@ -46,7 +46,7 @@ public class MyPageController {
     }
 
     @GetMapping("/myPage/account")
-    public ResponseEntity<MyAccountInfoResponseDTO> getMyaccount(@AuthenticationPrincipal OAuth2User principal) {
+    public ResponseEntity<MyAccountInfoResponseDTO> getMyAccountInfo(@AuthenticationPrincipal OAuth2User principal) {
         MyAccountInfoResponseDTO myAccountInfo = myPageService.getMyAccountInfo(principal);
         return ResponseEntity.ok(myAccountInfo);
     }
