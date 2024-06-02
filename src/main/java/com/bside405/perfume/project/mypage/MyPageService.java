@@ -34,13 +34,16 @@ public class MyPageService {
 
 
     public MyPerfume saveMyPerfume(OAuth2User principal, Long perfumeId) {
+        logger.debug("향수 저장 시작");
         User user = getCurrentUserFromOAuth2User(principal);
         Perfume perfume = getPerfumeById(perfumeId);
+        logger.debug("User : {}, Perfume : {}",user, perfume);
 
-        boolean exists = myPerfumeRepository.existsByUserIdAndPerfumeId(user.getId(), perfumeId);
+        Optional<MyPerfume>  myPerfumeOptional= myPerfumeRepository.findByUserIdAndPerfumeId(user.getId(), perfumeId);
+        logger.debug("myPerfumeOptional: {}, user.getId : {}, perfumeId : {}",myPerfumeOptional ,user.getId(), perfumeId);
 
-        if (exists) {
-            throw new MyPerfumeConflictException("이미 향수 앨범에 향수가 존재합니다");
+        if (myPerfumeOptional.isPresent()) {
+            throw new MyPerfumeConflictException("앨범에 향수가 이미 저장되어 있습니다.");
         } else {
             MyPerfume myPerfume = new MyPerfume();
             myPerfume.setUser(user);
@@ -146,6 +149,7 @@ public class MyPageService {
     public boolean checkIfRecommendedPerfumeExists(OAuth2User principal, Long perfumeId) {
         User user = getCurrentUserFromOAuth2User(principal);
         Long userId = user.getId();
-        return myPerfumeRepository.existsByUserIdAndPerfumeId(userId, perfumeId);
+        Optional<MyPerfume> myPerfumeOptional = myPerfumeRepository.findByUserIdAndPerfumeId(userId, perfumeId);
+        return myPerfumeOptional.isPresent();
     }
 }
