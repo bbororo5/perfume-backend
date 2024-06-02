@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MyPerfumeRepository extends JpaRepository<MyPerfume, Long> {
     Page<MyPerfume> findAllByUserId(Long userId, Pageable pageable);
+    boolean existsByUserIdAndPerfumeId(Long userId, Long perfumeId);
 }

@@ -134,4 +134,10 @@ public class MyPageService {
         myAccount.setEmail(user.getEmail());
         return myAccount;
     }
+
+    public boolean checkIfRecommendedPerfumeExists(OAuth2User principal, Long perfumeId) {
+        User user = getCurrentUserFromOAuth2User(principal);
+        Long userId = user.getId();
+        return myPerfumeRepository.existsByUserIdAndPerfumeId(userId, perfumeId);
+    }
 }
