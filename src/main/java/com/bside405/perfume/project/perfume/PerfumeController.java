@@ -25,19 +25,17 @@ public class PerfumeController {
     }
 
     @GetMapping("/perfumes/{id}")
-    public ResponseEntity<PerfumeResponseDTO> getPerfumeById(@PathVariable Long id) {
+    public ResponseEntity<PerfumeResponseDTO> getOnePerfume(@PathVariable Long id) {
         PerfumeResponseDTO perfumeResponseDTO = perfumeService.getPerfumeByID(id);
         return ResponseEntity.ok(perfumeResponseDTO);
     }
 
-    //201 상태코드가 담긴 응답의 헤더에는 location 헤더가 들어가며
-    // 이 헤더에는 클라이언트가 입력한 정보의 리소스를 확인할 수 있는 URL이 담겨있음. 혹은 리다이렉션(상태코드: 301,302)
     @PostMapping("/perfumes")
     public ResponseEntity<Void> createPerfume(@Valid @RequestBody PerfumeRequestDTO perfumeRequest) {
         PerfumeResponseDTO createdPerfume = perfumeService.savePerfume(perfumeRequest);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(createdPerfume.getId())//아무나 자원에 접근할 수 없게 보안처리도 고민하면 좋음.
+                .buildAndExpand(createdPerfume.getId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
@@ -53,5 +51,4 @@ public class PerfumeController {
         perfumeService.deletePerfume(id);
         return ResponseEntity.noContent().build();
     }
-
 }
