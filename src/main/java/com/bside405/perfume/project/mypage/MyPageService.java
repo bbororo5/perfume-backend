@@ -98,7 +98,7 @@ public class MyPageService {
     }
 
     private User getCurrentUserFromOAuth2User(OAuth2User principal) {
-        logger.debug("OAuth2User 객체로부터 현재 유저 찾기 시작, OAuth2Useer: {}", principal);
+        logger.debug("OAuth2User 객체로부터 현재 유저 찾기 시작, OAuth2User: {}", principal);
         String providerId = getProviderID(principal);
         logger.debug("providerId: {}", providerId);
         return userRepository.findByProviderId(providerId)
@@ -106,10 +106,12 @@ public class MyPageService {
     }
 
     private String getProviderID(OAuth2User principal) {
-        Map<String, String> response = principal.getAttribute("response");
-        logger.debug("response: {}", response);
-        if (response != null ) {
-            return response.get("id");
+        Map<String, Object> attributes = principal.getAttributes();
+        logger.debug("OAuth2User attributes: {}", attributes);
+        if (attributes != null ) {
+            String providerId = (String) attributes.get("id");
+            logger.debug("providerId : {}", providerId);
+            return providerId;
         } else {
             throw new UserNotFoundException("유저를 찾을 수 없습니다.");
         }
