@@ -3,6 +3,7 @@ package com.bside405.perfume.project.oauth2;
 import com.bside405.perfume.project.mypage.MyPageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -22,7 +23,7 @@ public class UserController {
         if (principal != null) {
             return ResponseEntity.ok().build();
         } else {
-            return ResponseEntity.status(401).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 }
