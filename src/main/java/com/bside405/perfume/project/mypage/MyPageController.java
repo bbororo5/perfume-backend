@@ -18,7 +18,7 @@ public class MyPageController {
     private final MyPageService myPageService;
 
     @GetMapping("/perfumes/check/{id}")
-    public ResponseEntity<Boolean> checkIfRecommendedPerfumeExists(@PathVariable Long id, @AuthenticationPrincipal OAuth2User principal) {
+    public ResponseEntity<Boolean> checkIfRecommendedPerfumeExists( @AuthenticationPrincipal OAuth2User principal, @PathVariable Long id) {
         boolean exists = myPageService.checkIfRecommendedPerfumeExists(principal, id);
         return ResponseEntity.ok().body(exists);
     }
