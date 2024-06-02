@@ -54,7 +54,6 @@ public class SecurityConfig {
                                 .invalidateHttpSession(true)
                                 .deleteCookies("JSESSIONID")
                                 .logoutUrl("/api/logout")
-                                .logoutSuccessUrl("https://frontend.perfume-bside.site/")
                 )
 
                 .csrf(AbstractHttpConfigurer::disable)
