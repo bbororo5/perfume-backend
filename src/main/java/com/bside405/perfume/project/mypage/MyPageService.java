@@ -1,5 +1,6 @@
 package com.bside405.perfume.project.mypage;
 
+import com.bside405.perfume.project.exception.MyPerfumeConflictException;
 import com.bside405.perfume.project.exception.MyPerfumeNotFound;
 import com.bside405.perfume.project.exception.PerfumeNotFoundException;
 import com.bside405.perfume.project.exception.UserNotFoundException;
@@ -8,6 +9,7 @@ import com.bside405.perfume.project.perfume.Perfume;
 import com.bside405.perfume.project.perfume.PerfumeRepository;
 import com.bside405.perfume.project.oauth2.User;
 import com.bside405.perfume.project.oauth2.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,12 +37,17 @@ public class MyPageService {
         User user = getCurrentUserFromOAuth2User(principal);
         Perfume perfume = getPerfumeById(perfumeId);
 
-        MyPerfume myPerfume = new MyPerfume();
-        myPerfume.setUser(user);
-        myPerfume.setPerfume(perfume);
-        myPerfume.setAddedDate(LocalDateTime.now());
+        boolean exists = myPerfumeRepository.existsByUserIdAndPerfumeId(user.getId(), perfumeId);
 
-        return myPerfumeRepository.save(myPerfume);
+        if (exists) {
+            throw new MyPerfumeConflictException("이미 향수 앨범에 향수가 존재합니다");
+        } else {
+            MyPerfume myPerfume = new MyPerfume();
+            myPerfume.setUser(user);
+            myPerfume.setPerfume(perfume);
+            myPerfume.setAddedDate(LocalDateTime.now());
+            return myPerfumeRepository.save(myPerfume);
+        }
     }
 
     public MyPerfumeResponseDTO getMyPerfumeOnlyOne(OAuth2User principal, Long MyPerfumeId) {
