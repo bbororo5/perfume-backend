@@ -39,4 +39,3 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MyPerfume> myPerfumes = new HashSet<>();
 }
-결
