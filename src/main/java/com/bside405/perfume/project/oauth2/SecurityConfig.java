@@ -1,6 +1,4 @@
-package com.bside405.perfume.project.oauth2.security;
-
-import com.bside405.perfume.project.oauth2.CustomOAuth2Service;
+package com.bside405.perfume.project.oauth2;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -54,6 +52,7 @@ public class SecurityConfig {
                                 .invalidateHttpSession(true)
                                 .deleteCookies("JSESSIONID")
                                 .logoutUrl("/api/logout")
+                                .logoutSuccessHandler(new CustomLogoutSuccessHandler())
                 )
 
                 .csrf(AbstractHttpConfigurer::disable)
