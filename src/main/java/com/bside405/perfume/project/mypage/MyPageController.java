@@ -4,14 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
-import java.util.Optional;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,10 +19,10 @@ public class MyPageController {
 
     private final MyPageService myPageService;
 
-    @GetMapping("/perfumes/check/{id}")
-    public ResponseEntity<Boolean> checkIfRecommendedPerfumeExists( @AuthenticationPrincipal OAuth2User principal, @PathVariable Long id) {
-        boolean exists = myPageService.checkIfRecommendedPerfumeExists(principal, id);
-        return ResponseEntity.ok().body(exists);
+    @GetMapping("/perfumes/check")
+    public ResponseEntity<List<ExistsCheckResponseDTO>> checkIfAllRecommendedPerfumesExists(@AuthenticationPrincipal OAuth2User principal, ExistsCheckRequestDTO requestDTO) {
+        List<ExistsCheckResponseDTO> existsList = myPageService.checkIfAllRecommendedPerfumesExists(principal, requestDTO);
+        return ResponseEntity.ok().body(existsList);
     }
 
     @PostMapping("/perfumes/{id}")

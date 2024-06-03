@@ -19,10 +19,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -150,10 +147,20 @@ public class MyPageService {
         return myAccount;
     }
 
-    public boolean checkIfRecommendedPerfumeExists(OAuth2User principal, Long perfumeId) {
+    public List<ExistsCheckResponseDTO> checkIfAllRecommendedPerfumesExists(OAuth2User principal, ExistsCheckRequestDTO requestDTO) {
         User user = getCurrentUserFromOAuth2User(principal);
         Long userId = user.getId();
-        Optional<MyPerfume> myPerfumeOptional = myPerfumeRepository.findByUserIdAndPerfumeId(userId, perfumeId);
-        return myPerfumeOptional.isPresent();
+
+        List<Long> existingPerfumeIds = myPerfumeRepository.findExistingPerfumeIds(userId, requestDTO.getIds());
+        Set<Long> existingPerfumeIdSet = new HashSet<>(existingPerfumeIds);
+
+        List<ExistsCheckResponseDTO> existsCheckResponseDTOList = new ArrayList<>();
+        for (Long perfumeId : requestDTO.getIds()) {
+            boolean exists = existingPerfumeIdSet.contains(perfumeId);
+            ExistsCheckResponseDTO existsCheckResponseDTO = new ExistsCheckResponseDTO(perfumeId, exists);
+            existsCheckResponseDTOList.add(existsCheckResponseDTO);
+        }
+
+        return existsCheckResponseDTOList;
     }
 }
