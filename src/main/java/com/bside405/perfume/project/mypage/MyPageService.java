@@ -8,11 +8,13 @@ import com.bside405.perfume.project.perfume.Perfume;
 import com.bside405.perfume.project.perfume.PerfumeRepository;
 import com.bside405.perfume.project.oauth2.User;
 import com.bside405.perfume.project.oauth2.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,7 @@ public class MyPageService {
     private final UserRepository userRepository;
     private final PerfumeRepository perfumeRepository;
     private final MyPerfumeRepository myPerfumeRepository;
+    private final HttpSession httpSession;
     private static final Logger logger = LoggerFactory.getLogger(MyPageService.class);
 
 
@@ -100,6 +103,8 @@ public class MyPageService {
     public void removeAccount(OAuth2User principal) {
         User user = getCurrentUserFromOAuth2User(principal);
         userRepository.delete(user);
+        httpSession.invalidate();
+        SecurityContextHolder.clearContext();
     }
 
     private Perfume getPerfumeById(Long perfumeId) {
