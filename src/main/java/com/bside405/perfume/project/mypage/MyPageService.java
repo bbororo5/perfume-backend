@@ -90,7 +90,8 @@ public class MyPageService {
         for (Long myPerfumeId : MyPerfumeIds) {
             MyPerfume myPerfume = myPerfumeRepository.findById(myPerfumeId)
                     .orElseThrow(() -> new MyPerfumeNotFound("앨범에 저장된 향수를 찾을 수 없습니다."));
-            if (myPerfume.getId().equals(userId)) {
+
+            if (myPerfume.getUser().getId().equals(userId)) {
                 myPerfumeRepository.delete(myPerfume);
             }
         }
