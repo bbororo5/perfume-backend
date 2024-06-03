@@ -26,7 +26,7 @@ public class RecommendationService {
     private final HashtagRepository hashtagRepository;
 
     public RecommendationResponseDTO recommendPerfume(RecommendationRequestDTO requestDTO) {
-        log.debug("서비스 레이어 시작");
+        log.debug("향수 추천 시작");
         log.debug("사용자에게 받은 해시태그들: {}", requestDTO.getHashtagList());
 
         validateHashtagList(requestDTO.getHashtagList());
@@ -36,7 +36,7 @@ public class RecommendationService {
 
         List<Perfume> perfumes = findRecommendedPerfumes(hashtagIds);
         log.debug("데이터베이스에서 perfumes 정보 가져오기: {}", perfumes);
-        log.debug("서비스 레이어 종료");
+        log.debug("향수 추천 종료");
         return buildRecommendationResponse(perfumes);
     }
 
