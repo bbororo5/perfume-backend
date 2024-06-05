@@ -1,4 +1,4 @@
-package com.bside405.perfume.project.gpt;
+package com.bside405.perfume.project.clova;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

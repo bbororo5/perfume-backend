@@ -1,4 +1,4 @@
-package com.bside405.perfume.project.gpt;
+package com.bside405.perfume.project.clova;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/api/gpt")
+@RequestMapping("/api/clova")
 @RequiredArgsConstructor
-public class ChatGPTController {
+public class ClovaController {
 
-    private final ChatGPTService chatGPTService;
+    private final ClovaService clovaService;
 
     @GetMapping("/perfume/{id}/explanation")
     public ResponseEntity<String> explainRecommendedPerfume(@PathVariable Long id) {
-        String explanation = chatGPTService.explainRecommendedPerfume(id);
+        String explanation = clovaService.explainRecommendedPerfume(id);
         return ResponseEntity.ok(explanation);
     }
 }
