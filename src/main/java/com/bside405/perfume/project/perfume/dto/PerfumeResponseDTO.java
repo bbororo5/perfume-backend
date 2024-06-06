@@ -1,6 +1,7 @@
-package com.bside405.perfume.project.perfume;
+package com.bside405.perfume.project.perfume.dto;
 
 
+import com.bside405.perfume.project.perfume.Perfume;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

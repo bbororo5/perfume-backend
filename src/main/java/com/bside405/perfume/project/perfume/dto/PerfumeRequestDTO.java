@@ -1,4 +1,4 @@
-package com.bside405.perfume.project.perfume;
+package com.bside405.perfume.project.perfume.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;

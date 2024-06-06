@@ -1,4 +1,4 @@
-package com.bside405.perfume.project.mypage;
+package com.bside405.perfume.project.mypage.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

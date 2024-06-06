@@ -1,4 +1,4 @@
-package com.bside405.perfume.project.recommendation;
+package com.bside405.perfume.project.recommendation.dto;
 
 import com.bside405.perfume.project.perfume.Hashtag;
 import com.fasterxml.jackson.annotation.JsonProperty;
