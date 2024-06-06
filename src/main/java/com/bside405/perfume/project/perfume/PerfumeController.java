@@ -1,5 +1,7 @@
 package com.bside405.perfume.project.perfume;
 
+import com.bside405.perfume.project.perfume.dto.PerfumeRequestDTO;
+import com.bside405.perfume.project.perfume.dto.PerfumeResponseDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

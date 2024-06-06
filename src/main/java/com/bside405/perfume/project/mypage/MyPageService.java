@@ -4,14 +4,14 @@ import com.bside405.perfume.project.exception.MyPerfumeConflictException;
 import com.bside405.perfume.project.exception.MyPerfumeNotFound;
 import com.bside405.perfume.project.exception.PerfumeNotFoundException;
 import com.bside405.perfume.project.exception.UserNotFoundException;
+import com.bside405.perfume.project.mypage.dto.*;
 import com.bside405.perfume.project.perfume.Perfume;
 import com.bside405.perfume.project.perfume.PerfumeRepository;
 import com.bside405.perfume.project.oauth2.User;
 import com.bside405.perfume.project.oauth2.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MyPageService {
@@ -28,17 +29,15 @@ public class MyPageService {
     private final PerfumeRepository perfumeRepository;
     private final MyPerfumeRepository myPerfumeRepository;
     private final HttpSession httpSession;
-    private static final Logger logger = LoggerFactory.getLogger(MyPageService.class);
-
 
     public MyPerfume saveMyPerfume(OAuth2User principal, Long perfumeId) {
-        logger.debug("향수 저장 시작");
+        log.debug("향수 저장 시작");
         User user = getCurrentUserFromOAuth2User(principal);
         Perfume perfume = getPerfumeById(perfumeId);
-        logger.debug("User : {}, Perfume : {}",user, perfume);
+        log.debug("User : {}, Perfume : {}",user, perfume);
 
         Optional<MyPerfume>  myPerfumeOptional= myPerfumeRepository.findByUserIdAndPerfumeId(user.getId(), perfumeId);
-        logger.debug("myPerfumeOptional: {}, user.getId : {}, perfumeId : {}",myPerfumeOptional ,user.getId(), perfumeId);
+        log.debug("myPerfumeOptional: {}, user.getId : {}, perfumeId : {}",myPerfumeOptional ,user.getId(), perfumeId);
 
         if (myPerfumeOptional.isPresent()) {
             throw new MyPerfumeConflictException("앨범에 향수가 이미 저장되어 있습니다.");
@@ -66,18 +65,18 @@ public class MyPageService {
     }
 
     public MyPerfumePaginationResponseDTO getUserPerfumes(OAuth2User principal, Pageable pageable) {
-        logger.debug("마이페이지 향수 읽기 시작");
+        log.debug("마이페이지 향수 읽기 시작");
         User user = getCurrentUserFromOAuth2User(principal);
-        logger.debug("user : {}", user);
+        log.debug("user : {}", user);
         Page<MyPerfume> myPerfumePage = myPerfumeRepository.findAllByUserId(user.getId(), pageable);
-        logger.debug("myPerfumePage : {}", myPerfumePage);
+        log.debug("myPerfumePage : {}", myPerfumePage);
 
         List<MyPerfumeResponseDTO> responseDTOs = new ArrayList<>();
         for (MyPerfume myPerfume : myPerfumePage.getContent()) {
             MyPerfumeResponseDTO responseDTO = convertToMyPerfumeResponseDTO(myPerfume);
             responseDTOs.add(responseDTO);
         }
-        logger.debug("마이페이지 향수 읽기 종료");
+        log.debug("마이페이지 향수 읽기 종료");
         return new MyPerfumePaginationResponseDTO(responseDTOs,
                                             myPerfumePage.getTotalPages(),
                                             myPerfumePage.getTotalElements());
@@ -110,19 +109,19 @@ public class MyPageService {
     }
 
     private User getCurrentUserFromOAuth2User(OAuth2User principal) {
-        logger.debug("OAuth2User 객체로부터 현재 유저 찾기 시작, OAuth2User: {}", principal);
+        log.debug("OAuth2User 객체로부터 현재 유저 찾기 시작, OAuth2User: {}", principal);
         String providerId = getProviderID(principal);
-        logger.debug("providerId: {}", providerId);
+        log.debug("providerId: {}", providerId);
         return userRepository.findByProviderId(providerId)
                 .orElseThrow(() -> new UserNotFoundException("유저를 찾을 수 없습니다."));
     }
 
     private String getProviderID(OAuth2User principal) {
         Map<String, Object> attributes = principal.getAttributes();
-        logger.debug("OAuth2User attributes: {}", attributes);
+        log.debug("OAuth2User attributes: {}", attributes);
         if (attributes != null ) {
             String providerId = (String) attributes.get("id");
-            logger.debug("providerId : {}", providerId);
+            log.debug("providerId : {}", providerId);
             return providerId;
         } else {
             throw new UserNotFoundException("유저를 찾을 수 없습니다.");

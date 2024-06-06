@@ -1,5 +1,7 @@
 package com.bside405.perfume.project.recommendation;
 
+import com.bside405.perfume.project.recommendation.dto.RecommendationRequestDTO;
+import com.bside405.perfume.project.recommendation.dto.RecommendationResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

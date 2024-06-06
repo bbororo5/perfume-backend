@@ -1,5 +1,6 @@
 package com.bside405.perfume.project.mypage;
 
+import com.bside405.perfume.project.mypage.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;

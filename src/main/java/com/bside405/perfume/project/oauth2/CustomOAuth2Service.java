@@ -1,7 +1,6 @@
 package com.bside405.perfume.project.oauth2;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
@@ -13,10 +12,10 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class CustomOAuth2Service extends DefaultOAuth2UserService {
 
-    private static final Logger logger = LoggerFactory.getLogger(CustomOAuth2Service.class);
     private final UserRepository userRepository;
 
     public CustomOAuth2Service(UserRepository userRepository) {
@@ -25,27 +24,27 @@ public class CustomOAuth2Service extends DefaultOAuth2UserService {
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        logger.debug("OAuth2 사용자 요청 처리 시작");
+        log.debug("OAuth2 사용자 요청 처리 시작");
 
         // Access Token 로그 추가
         OAuth2AccessToken accessToken = userRequest.getAccessToken();
-        logger.debug("Access Token: {}", accessToken.getTokenValue());
+        log.debug("Access Token: {}", accessToken.getTokenValue());
 
         OAuth2User oAuth2User;
         try {
             oAuth2User = super.loadUser(userRequest);
-            logger.debug("OAuth2 사용자 로드 성공: {}", oAuth2User.getAttributes());
+            log.debug("OAuth2 사용자 로드 성공: {}", oAuth2User.getAttributes());
         } catch (OAuth2AuthenticationException e) {
-            logger.error("OAuth2 사용자 로드 중 오류 발생: {}", e.getMessage(), e);
+            log.error("OAuth2 사용자 로드 중 오류 발생: {}", e.getMessage(), e);
             throw e;
         }
 
         Map<String, Object> attributes = oAuth2User.getAttributes();
-        logger.debug("OAuth2 사용자 속성: {}", attributes);
+        log.debug("OAuth2 사용자 속성: {}", attributes);
         Map<String, Object> response = (Map<String, Object>) attributes.get("response");
 
         if (response != null) {
-            logger.debug("OAuth2 사용자 정보 추출 성공: {}", response);
+            log.debug("OAuth2 사용자 정보 추출 성공: {}", response);
             oAuth2User = new DefaultOAuth2User(
                     oAuth2User.getAuthorities(),
                     response,
@@ -53,7 +52,7 @@ public class CustomOAuth2Service extends DefaultOAuth2UserService {
             );
         } else {
             String errorMessage = "OAuth2User에서 'response' 속성을 찾을 수 없습니다.";
-            logger.error(errorMessage);
+            log.error(errorMessage);
             throw new OAuth2AuthenticationException(errorMessage);
         }
 
@@ -68,7 +67,7 @@ public class CustomOAuth2Service extends DefaultOAuth2UserService {
             String name = (String) response.get("name");
             String providerId = (String) response.get("id");
 
-            logger.info("OAuth2 사용자 정보 - 이메일: {}, 이름: {}, 제공자 ID: {}", email, name, providerId);
+            log.info("OAuth2 사용자 정보 - 이메일: {}, 이름: {}, 제공자 ID: {}", email, name, providerId);
 
             Optional<User> optionalUser = userRepository.findByProviderId(providerId);
 
@@ -79,12 +78,12 @@ public class CustomOAuth2Service extends DefaultOAuth2UserService {
                 user.setProviderId(providerId);
                 userRepository.save(user);
 
-                logger.info("새로운 사용자 저장 - 이메일: {}, 이름: {}, 제공자 ID: {}", email, name, providerId);
+                log.info("새로운 사용자 저장 - 이메일: {}, 이름: {}, 제공자 ID: {}", email, name, providerId);
             } else {
-                logger.info("기존 사용자 로그인 - 이메일: {}, 이름: {}, 제공자 ID: {}", email, name, providerId);
+                log.info("기존 사용자 로그인 - 이메일: {}, 이름: {}, 제공자 ID: {}", email, name, providerId);
             }
         } else {
-            logger.error("OAuth2User의 속성에서 사용자 정보를 찾을 수 없습니다.");
+            log.error("OAuth2User의 속성에서 사용자 정보를 찾을 수 없습니다.");
         }
     }
 }
