@@ -89,6 +89,8 @@ public class ClovaChatServiceImpl implements AIChatService {
                 .header(CLOVA_API_KEY_HEADER, clovaApiKey)
                 .header(GATEWAY_API_KEY_HEADER, gatewayApiKey)
                 .accept(MediaType.TEXT_EVENT_STREAM)
+                .header(HttpHeaders.CACHE_CONTROL, "no-cache")
+                .header(HttpHeaders.CONNECTION, "keep-alive")
                 .bodyValue(requestJson)
                 .retrieve()
                 .onStatus(
