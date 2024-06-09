@@ -4,6 +4,7 @@ import com.bside405.perfume.project.exception.*;
 import com.bside405.perfume.project.perfume.PerfumeHashtagRepository;
 import com.bside405.perfume.project.perfume.PerfumeRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
@@ -32,10 +33,13 @@ public class ClovaChatServiceImpl implements AIChatService {
     private String clovaApiKey;
     @Value("${clova.gateway.api.key}")
     private String gatewayApiKey;
+    @Value("${clova.request.id}")
+    private String clovaRequestId;
 
     private final String CLOVA_API_URL = "https://clovastudio.stream.ntruss.com/testapp/v1/chat-completions/HCX-DASH-001";
     private final String CLOVA_API_KEY_HEADER = "X-NCP-CLOVASTUDIO-API-KEY";
     private final String GATEWAY_API_KEY_HEADER = "X-NCP-APIGW-API-KEY";
+    private final String CLOVA_STUDIO_REQUEST_ID = "X-NCP-CLOVASTUDIO-REQUEST-ID";
 
     private final RestTemplate restTemplate;
     private final WebClient webClient;
@@ -49,9 +53,10 @@ public class ClovaChatServiceImpl implements AIChatService {
 
         //헤더
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set(CLOVA_API_KEY_HEADER, clovaApiKey);
         headers.set(GATEWAY_API_KEY_HEADER, gatewayApiKey);
+        headers.set(CLOVA_STUDIO_REQUEST_ID, clovaRequestId);
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
         //바디
         String requestJson = prepareRequestJSON(perfumeId);
@@ -85,10 +90,12 @@ public class ClovaChatServiceImpl implements AIChatService {
         String requestJson = prepareRequestJSON(perfumeId);
 
         return webClient.post()
-                .uri("/testapp/v1/chat-completions/HCX-DASH-001")
+                .uri(CLOVA_API_URL)
                 .header(CLOVA_API_KEY_HEADER, clovaApiKey)
                 .header(GATEWAY_API_KEY_HEADER, gatewayApiKey)
+                .header(CLOVA_STUDIO_REQUEST_ID, clovaRequestId)
                 .accept(MediaType.TEXT_EVENT_STREAM)
+                .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.CACHE_CONTROL, "no-cache")
                 .header(HttpHeaders.CONNECTION, "keep-alive")
                 .bodyValue(requestJson)
@@ -101,6 +108,17 @@ public class ClovaChatServiceImpl implements AIChatService {
                         }
                 )
                 .bodyToFlux(String.class)
+                .takeUntil(data -> {
+                    ObjectMapper mapper = new ObjectMapper();
+                    try {
+                        JsonNode jsonNode = mapper.readTree(data);
+                        String stopReason = jsonNode.path("stopReason").asText();
+                        return "stop_before".equals(stopReason);
+                    } catch (JsonProcessingException e) {
+                        log.error("Error processing JSON", e);
+                        return false;
+                    }
+                })
                 .doOnError(WebClientResponseException.class, e -> {
                     log.error("WebClientResponseException: {}", e.getMessage());
                     // Custom handling for WebClientResponseException
