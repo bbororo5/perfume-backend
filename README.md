@@ -1,1 +1,1 @@
-서비스 주소: https://frontend.perfume-bisde.site
+서비스 주소: https://frontend.perfume-bside.site
