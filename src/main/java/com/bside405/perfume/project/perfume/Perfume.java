@@ -22,15 +22,17 @@ public class Perfume {
     @Column(name = "perfume_id")
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String brand;
 
-    @Column(name = "e_name")
+    @Column(unique = true, nullable = false, name = "e_name")
     private String eName;
 
-    @Column(name = "image_url")
-    private String imageURL;
+    @Column(unique = true, nullable = false, name = "image_url")
+    private String imageUrl;
 
     @CreatedDate
     @Column(name = "created_date", updatable = false)
@@ -40,6 +42,6 @@ public class Perfume {
     @Column(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
 
-    @OneToMany(mappedBy = "perfume", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "perfume", cascade = CascadeType.ALL)
     private Set<PerfumeHashtag> perfumeHashtags = new HashSet<>();
 }

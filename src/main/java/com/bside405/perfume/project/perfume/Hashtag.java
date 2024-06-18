@@ -20,9 +20,9 @@ public class Hashtag {
     @Column(name = "hashtag_id")
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "hashtag", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "hashtag", cascade = CascadeType.ALL)
     private Set<PerfumeHashtag> perfumeHashtags = new HashSet<>();
 }
