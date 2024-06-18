@@ -23,6 +23,6 @@ public class PerfumeResponseDTO {
         this.name = perfume.getName();
         this.eName = perfume.getEName();
         this.brand = perfume.getBrand();
-        this.imageURL = perfume.getImageURL();
+        this.imageURL = perfume.getImageUrl();
     }
 }

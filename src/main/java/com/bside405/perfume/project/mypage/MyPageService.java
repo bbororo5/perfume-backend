@@ -134,7 +134,7 @@ public class MyPageService {
         myPerfumeResponseDTO.setName(myPerfume.getPerfume().getName());
         myPerfumeResponseDTO.setEName(myPerfume.getPerfume().getEName());
         myPerfumeResponseDTO.setBrand(myPerfume.getPerfume().getBrand());
-        myPerfumeResponseDTO.setImageURL(myPerfume.getPerfume().getImageURL());
+        myPerfumeResponseDTO.setImageURL(myPerfume.getPerfume().getImageUrl());
         return myPerfumeResponseDTO;
     }
 
