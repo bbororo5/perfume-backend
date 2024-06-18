@@ -14,7 +14,7 @@ import reactor.core.publisher.Flux;
 @RequiredArgsConstructor
 public class AIChatController {
 
-    private final AIChatService aiChatService;
+    private final AIExplainService aiChatService;
 
     @GetMapping("/perfume/{id}/explanation")
     public ResponseEntity<String> explainRecommendedPerfume(@PathVariable Long id) {

@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @Slf4j
-public abstract class AbstractAIChatService implements AIChatService {
+public abstract class AbstractAIChatService implements AIExplainService, AIPromptService {
 
     protected final PerfumeHashtagRepository perfumeHashtagRepository;
     protected final PerfumeRepository perfumeRepository;
