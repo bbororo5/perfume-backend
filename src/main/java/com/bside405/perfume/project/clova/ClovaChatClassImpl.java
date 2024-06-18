@@ -1,6 +1,5 @@
 package com.bside405.perfume.project.clova;
 
-import com.bside405.perfume.project.exception.*;
 import com.bside405.perfume.project.perfume.PerfumeHashtagRepository;
 import com.bside405.perfume.project.perfume.PerfumeRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -27,7 +26,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Primary
-public class ClovaChatServiceImpl implements AIChatService {
+public class ClovaChatClassImpl extends AbstractAIChatService {
 
     @Value("${clova.api.key}")
     private String clovaApiKey;
@@ -44,24 +43,18 @@ public class ClovaChatServiceImpl implements AIChatService {
     private final RestTemplate restTemplate;
     private final WebClient webClient;
 
-    private final PerfumeRepository perfumeRepository;
-    private final PerfumeHashtagRepository perfumeHashtagRepository;
-
     @Override
-    public String explainRecommendedPerfume(Long perfumeId) {
+    public String explain(Long perfumeId) {
         log.debug("Clova Studio 요청 작업 시작");
 
-        //헤더
         HttpHeaders headers = new HttpHeaders();
         headers.set(CLOVA_API_KEY_HEADER, clovaApiKey);
         headers.set(GATEWAY_API_KEY_HEADER, gatewayApiKey);
         headers.set(CLOVA_STUDIO_REQUEST_ID, clovaRequestId);
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        //바디
         String requestJson = prepareRequestJSON(perfumeId);
 
-        //엔티티
         HttpEntity<String> entity = new HttpEntity<>(requestJson, headers);
 
         try {
@@ -85,7 +78,7 @@ public class ClovaChatServiceImpl implements AIChatService {
     }
 
     @Override
-    public Flux<String> explainRecommendedPerfumeStream(Long perfumeId) {
+    public Flux<String> explainByStream(Long perfumeId) {
         log.debug("Clova Studio 스트림 요청 작업 시작");
         String requestJson = prepareRequestJSON(perfumeId);
 
@@ -139,11 +132,11 @@ public class ClovaChatServiceImpl implements AIChatService {
 
     @Override
     public String prepareRequestJSON(Long perfumeId) {
-        List<Object[]> perfumeNameObject = getKoreanAndEnglishNameOfRecommendedPerfume(perfumeId);
-        String koreanName = (String) perfumeNameObject.get(0)[0];
-        String englishName = (String) perfumeNameObject.get(0)[1];
+        PerfumeNameDTO perfumeNameDTO = super.getKoreanAndEnglishNameOfRecommendedPerfume(perfumeId);
+        String koreanName = perfumeNameDTO.getName();
+        String englishName = perfumeNameDTO.getEName();
 
-        List<String> hashtagNameList = getAllHashtagsOfRecommendedPerfume(perfumeId);
+        List<String> hashtagNameList = super.getAllHashtagsOfRecommendedPerfume(perfumeId);
         String hashtags = String.join(", ", hashtagNameList);
 
         String content = String.format("너는 향수 전문가야. 사용자는 자신이 선호하는 키워드를 가지고 외부에서 향수를 추천받았어. 사용자는 너에게 키워드 몇 개를 주면, 그 키워드가 추천된 향수에 왜 어울리는지 설득력 있으면서 오감을 자극하는 설명을 하면돼. 여기에는 문학적 표현을 적극 활용하여 향수가 안겨다주는 인상을 알려줘.\n\n"
@@ -176,25 +169,5 @@ public class ClovaChatServiceImpl implements AIChatService {
         } catch (JsonProcessingException e) {
             throw new RuntimeException("JSON Processing Exception", e);
         }
-    }
-
-    private List<String> getAllHashtagsOfRecommendedPerfume(Long perfumeId) {
-        List<String> hashtagNameList = perfumeHashtagRepository.findHashtagNamesByPerfumeId(perfumeId);
-        if (hashtagNameList.isEmpty()) {
-            throw new HashtagNotFoundException("해시태그를 찾을 수 없습니다.");
-        }
-        return hashtagNameList;
-    }
-
-    private List<Object[]> getKoreanAndEnglishNameOfRecommendedPerfume(Long perfumeId) {
-        List<Object[]> perfumeNameObject = perfumeRepository.findNameAndENameById(perfumeId);
-        log.debug("perfumeNamaeObject : {}", perfumeNameObject);
-
-        if (perfumeNameObject == null) {
-            log.debug("perfumeNameObject null 예외 발생");
-            throw new PerfumeNotFoundException("향수를 찾을 수 없습니다");
-        }
-
-        return perfumeNameObject;
     }
 }

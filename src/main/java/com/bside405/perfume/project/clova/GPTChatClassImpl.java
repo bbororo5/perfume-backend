@@ -19,15 +19,13 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class GPTServiceImpl implements AIChatService {
+public class GPTChatClassImpl extends AbstractAIChatService {
 
     @Value("${openai.api.key}")
     private String apiKey;
     private final RestTemplate restTemplate;
-    private final PerfumeRepository perfumeRepository;
-    private final PerfumeHashtagRepository perfumeHashtagRepository;
 
-    public String explainRecommendedPerfume(Long perfumeId) {
+    public String explain(Long perfumeId) {
         log.debug("gpt 요청 작업 시작");
         String url = "https://api.openai.com/v1/chat/completions";
 
@@ -68,21 +66,21 @@ public class GPTServiceImpl implements AIChatService {
     }
 
     @Override
-    public Flux<String> explainRecommendedPerfumeStream(Long perfumeId) {
+    public Flux<String> explainByStream(Long perfumeId) {
         return null;
     }
 
     @Override
     public String prepareRequestJSON(Long perfumeId) {
-        List<Object[]> perfumeNameObject = getKoreanAndEnglishNameOfRecommendedPerfume(perfumeId);
+        PerfumeNameDTO perfumeNameDTO = super.getKoreanAndEnglishNameOfRecommendedPerfume(perfumeId);
 
-        log.debug("name : {}", perfumeNameObject.get(0)[0]);
-        String koreanName = (String) perfumeNameObject.get(0)[0];
-        log.debug("ename : {}", perfumeNameObject.get(0)[1]);
-        String englishName = (String) perfumeNameObject.get(0)[1];
+        log.debug("name : {}", perfumeNameDTO.getName());
+        String koreanName = perfumeNameDTO.getName();
+        log.debug("ename : {}", perfumeNameDTO.getEName());
+        String englishName = perfumeNameDTO.getEName();
 
         log.debug("해시태그들 가져오기 시작");
-        List<String> hashtagNameList = getAllHashtagsOfRecommendedPerfume(perfumeId);
+        List<String> hashtagNameList = super.getAllHashtagsOfRecommendedPerfume(perfumeId);
         log.debug("hashtagNameList : {}", hashtagNameList);
         String hashtags = String.join(", ", hashtagNameList);
 
@@ -109,25 +107,5 @@ public class GPTServiceImpl implements AIChatService {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private List<String> getAllHashtagsOfRecommendedPerfume(Long perfumeId) {
-        List<String> hashtagNameList = perfumeHashtagRepository.findHashtagNamesByPerfumeId(perfumeId);
-        if (hashtagNameList.isEmpty()) {
-            throw new HashtagNotFoundException("해시태그를 찾을 수 없습니다.");
-        }
-        return hashtagNameList;
-    }
-
-    private List<Object[]> getKoreanAndEnglishNameOfRecommendedPerfume(Long perfumeId) {
-        List<Object[]> perfumeNameObject = perfumeRepository.findNameAndENameById(perfumeId);
-        log.debug("perfumeNamaeObject : {}", perfumeNameObject);
-
-        if (perfumeNameObject == null) {
-            log.debug("perfumeNameObject null 예외 발생");
-            throw new PerfumeNotFoundException("향수를 찾을 수 없습니다");
-        }
-
-        return perfumeNameObject;
     }
 }
