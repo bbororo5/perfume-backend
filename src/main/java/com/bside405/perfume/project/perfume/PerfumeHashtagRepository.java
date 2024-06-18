@@ -9,6 +9,9 @@ import java.util.List;
 
 @Repository
 public interface PerfumeHashtagRepository extends JpaRepository<PerfumeHashtag, Long > {
-    @Query("SELECT h.name FROM Hashtag h JOIN PerfumeHashtag ph ON h.id = ph.hashtag.id WHERE ph.perfume.id = :perfumeId")
+    @Query("SELECT h.name " +
+            "FROM Hashtag h " +
+            "JOIN PerfumeHashtag ph ON h.id = ph.hashtag.id " +
+            "WHERE ph.perfume.id = :perfumeId")
     List<String> findHashtagNamesByPerfumeId(@Param("perfumeId") Long perfumeId);
 }

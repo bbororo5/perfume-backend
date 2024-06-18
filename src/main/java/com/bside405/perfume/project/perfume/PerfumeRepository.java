@@ -9,6 +9,8 @@ import java.util.List;
 
 @Repository
 public interface PerfumeRepository extends JpaRepository<Perfume, Long> {
-    @Query("SELECT new com.bside405.perfume.project.clova.PerfumeNameDTO(p.name, p.eName) FROM Perfume p WHERE p.id = :perfumeId")
+    @Query("SELECT new com.bside405.perfume.project.clova.PerfumeNameDTO(p.name, p.englishName)" +
+            "FROM Perfume p " +
+            "WHERE p.id = :perfumeId")
     PerfumeNameDTO findNameAndENameById(@Param("perfumeId") Long perfumeId);
 }
