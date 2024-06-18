@@ -41,7 +41,7 @@ public class PerfumeService {
         }
 
         perfume.setName(perfumeRequest.getName());
-        perfume.setEName(perfumeRequest.getEName());
+        perfume.setEnglishName(perfumeRequest.getEName());
         perfume.setBrand(perfumeRequest.getBrand());
         perfume.setImageUrl(perfumeRequest.getImageURL());
         Perfume savedPerfume = perfumeRepository.save(perfume);
@@ -58,7 +58,7 @@ public class PerfumeService {
         PerfumeResponseDTO perfumeResponseDTO = new PerfumeResponseDTO();
         perfumeResponseDTO.setId(perfume.getId());
         perfumeResponseDTO.setName(perfume.getName());
-        perfumeResponseDTO.setEName(perfume.getEName());
+        perfumeResponseDTO.setEName(perfume.getEnglishName());
         perfumeResponseDTO.setBrand(perfume.getBrand());
         perfumeResponseDTO.setImageURL(perfume.getImageUrl());
         return perfumeResponseDTO;

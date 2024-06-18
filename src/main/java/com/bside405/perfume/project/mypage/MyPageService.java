@@ -132,7 +132,7 @@ public class MyPageService {
         MyPerfumeResponseDTO myPerfumeResponseDTO = new MyPerfumeResponseDTO();
         myPerfumeResponseDTO.setMyPerfumeId(myPerfume.getId());
         myPerfumeResponseDTO.setName(myPerfume.getPerfume().getName());
-        myPerfumeResponseDTO.setEName(myPerfume.getPerfume().getEName());
+        myPerfumeResponseDTO.setEName(myPerfume.getPerfume().getEnglishName());
         myPerfumeResponseDTO.setBrand(myPerfume.getPerfume().getBrand());
         myPerfumeResponseDTO.setImageURL(myPerfume.getPerfume().getImageUrl());
         return myPerfumeResponseDTO;

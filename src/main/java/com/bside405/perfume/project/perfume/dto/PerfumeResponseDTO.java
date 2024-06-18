@@ -21,7 +21,7 @@ public class PerfumeResponseDTO {
     public PerfumeResponseDTO (Perfume perfume) {
         this.id = perfume.getId();
         this.name = perfume.getName();
-        this.eName = perfume.getEName();
+        this.eName = perfume.getEnglishName();
         this.brand = perfume.getBrand();
         this.imageURL = perfume.getImageUrl();
     }
