@@ -4,17 +4,22 @@ import com.bside405.perfume.project.exception.HashtagNotFoundException;
 import com.bside405.perfume.project.exception.PerfumeNotFoundException;
 import com.bside405.perfume.project.perfume.PerfumeHashtagRepository;
 import com.bside405.perfume.project.perfume.PerfumeRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 @Slf4j
-@RequiredArgsConstructor
 public abstract class AbstractAIChatService implements AIChatService {
 
-    private PerfumeHashtagRepository perfumeHashtagRepository;
-    private PerfumeRepository perfumeRepository;
+    protected final PerfumeHashtagRepository perfumeHashtagRepository;
+    protected final PerfumeRepository perfumeRepository;
+
+    @Autowired
+    public AbstractAIChatService(PerfumeHashtagRepository perfumeHashtagRepository, PerfumeRepository perfumeRepository) {
+        this.perfumeHashtagRepository = perfumeHashtagRepository;
+        this.perfumeRepository = perfumeRepository;
+    }
 
     protected List<String> getAllHashtagsOfRecommendedPerfume(Long perfumeId) {
         List<String> hashtagNameList = perfumeHashtagRepository.findHashtagNamesByPerfumeId(perfumeId);

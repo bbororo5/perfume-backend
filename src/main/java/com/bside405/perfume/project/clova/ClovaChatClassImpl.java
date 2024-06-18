@@ -24,7 +24,6 @@ import java.util.List;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 @Primary
 public class ClovaChatClassImpl extends AbstractAIChatService {
 
@@ -42,6 +41,13 @@ public class ClovaChatClassImpl extends AbstractAIChatService {
 
     private final RestTemplate restTemplate;
     private final WebClient webClient;
+
+    public ClovaChatClassImpl(PerfumeHashtagRepository perfumeHashtagRepository, PerfumeRepository perfumeRepository,
+                              RestTemplate restTemplate, WebClient webClient) {
+        super(perfumeHashtagRepository, perfumeRepository);
+        this.restTemplate = restTemplate;
+        this.webClient = webClient;
+    }
 
     @Override
     public String explain(Long perfumeId) {

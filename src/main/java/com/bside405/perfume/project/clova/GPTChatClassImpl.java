@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -18,12 +19,16 @@ import java.util.List;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class GPTChatClassImpl extends AbstractAIChatService {
 
     @Value("${openai.api.key}")
     private String apiKey;
     private final RestTemplate restTemplate;
+
+    public GPTChatClassImpl(PerfumeHashtagRepository perfumeHashtagRepository, PerfumeRepository perfumeRepository, RestTemplate restTemplate) {
+        super(perfumeHashtagRepository, perfumeRepository);
+        this.restTemplate = restTemplate;
+    }
 
     public String explain(Long perfumeId) {
         log.debug("gpt 요청 작업 시작");
