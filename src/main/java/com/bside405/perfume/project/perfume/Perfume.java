@@ -29,7 +29,7 @@ public class Perfume {
     private String brand;
 
     @Column(unique = true, nullable = false, name = "e_name")
-    private String eName;
+    private String englishName;
 
     @Column(unique = true, nullable = false, name = "image_url")
     private String imageUrl;

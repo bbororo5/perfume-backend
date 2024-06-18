@@ -23,51 +23,9 @@ public class GPTChatClassImpl extends AbstractAIChatService {
 
     @Value("${openai.api.key}")
     private String apiKey;
-    private final RestTemplate restTemplate;
 
-    public GPTChatClassImpl(PerfumeHashtagRepository perfumeHashtagRepository, PerfumeRepository perfumeRepository, RestTemplate restTemplate) {
+    public GPTChatClassImpl(PerfumeHashtagRepository perfumeHashtagRepository, PerfumeRepository perfumeRepository) {
         super(perfumeHashtagRepository, perfumeRepository);
-        this.restTemplate = restTemplate;
-    }
-
-    public String explain(Long perfumeId) {
-        log.debug("gpt 요청 작업 시작");
-        String url = "https://api.openai.com/v1/chat/completions";
-
-        //헤더
-        log.debug("헤더 셋팅 작업 시작");
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(apiKey);
-        log.debug("headers : {}", headers);
-
-        //바디
-        String requestJson = prepareRequestJSON(perfumeId);
-
-        //엔티티
-        HttpEntity<String> entity = new HttpEntity<>(requestJson, headers);
-        log.debug("httpEntity: {}", entity);
-
-        try {
-            log.debug("요청 시작");
-            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
-            log.debug("요청 완료 reponse: {}", response);
-            return response.getBody();
-        } catch (HttpClientErrorException e) {
-            log.debug("예외1");
-            throw new GPTClientErrorException(e.getMessage(), e, e.getStatusCode());
-        } catch (HttpServerErrorException e) {
-            log.debug("예외2");
-            throw new GPTServerErrorException(e.getMessage(), e, e.getStatusCode());
-        } catch (ResourceAccessException e) {
-            log.debug("예외3");
-            // 네트워크 오류 관련 예외 클래스
-            throw new GPTResourceAccessException("Resource access error: " + e.getMessage(), e, HttpStatusCode.valueOf(503));
-        } catch (RestClientException e) {
-            log.debug("예외4");
-            // 앞선 예외의 상위 예외 클래스
-            throw new GPTRestClientException("An error occurred while communicating with the API: " + e.getMessage(), e, HttpStatusCode.valueOf(500));
-        }
     }
 
     @Override

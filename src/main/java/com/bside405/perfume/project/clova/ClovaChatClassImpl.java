@@ -39,48 +39,12 @@ public class ClovaChatClassImpl extends AbstractAIChatService {
     private final String GATEWAY_API_KEY_HEADER = "X-NCP-APIGW-API-KEY";
     private final String CLOVA_STUDIO_REQUEST_ID = "X-NCP-CLOVASTUDIO-REQUEST-ID";
 
-    private final RestTemplate restTemplate;
     private final WebClient webClient;
 
     public ClovaChatClassImpl(PerfumeHashtagRepository perfumeHashtagRepository, PerfumeRepository perfumeRepository,
-                              RestTemplate restTemplate, WebClient webClient) {
+                              WebClient webClient) {
         super(perfumeHashtagRepository, perfumeRepository);
-        this.restTemplate = restTemplate;
         this.webClient = webClient;
-    }
-
-    @Override
-    public String explain(Long perfumeId) {
-        log.debug("Clova Studio 요청 작업 시작");
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(CLOVA_API_KEY_HEADER, clovaApiKey);
-        headers.set(GATEWAY_API_KEY_HEADER, gatewayApiKey);
-        headers.set(CLOVA_STUDIO_REQUEST_ID, clovaRequestId);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        String requestJson = prepareRequestJSON(perfumeId);
-
-        HttpEntity<String> entity = new HttpEntity<>(requestJson, headers);
-
-        try {
-            log.debug("요청 시작");
-            ResponseEntity<String> response = restTemplate.exchange(CLOVA_API_URL, HttpMethod.POST, entity, String.class);
-            log.debug("요청 완료 response: {}", response);
-            return response.getBody();
-        } catch (HttpClientErrorException e) {
-            log.error("HttpClientErrorException: StatusCode={}, ResponseBody={}", e.getStatusCode(), e.getResponseBodyAsString());
-            throw new HttpClientErrorException(e.getStatusCode(), e.getMessage());
-        } catch (HttpServerErrorException e) {
-            log.error("HttpServerErrorException: StatusCode={}, ResponseBody={}", e.getStatusCode(), e.getResponseBodyAsString());
-            throw new HttpServerErrorException(e.getStatusCode(), e.getMessage());
-        } catch (ResourceAccessException e) {
-            log.error("ResourceAccessException: {}", e.getMessage(), e);
-            throw new ResourceAccessException("Resource access error: " + e.getMessage());
-        } catch (RestClientException e) {
-            log.error("RestClientException: {}", e.getMessage(), e);
-            throw new RestClientException("An error occurred while communicating with the API: " + e.getMessage(), e);
-        }
     }
 
     @Override
